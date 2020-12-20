@@ -28,8 +28,19 @@ def run_ui():
 
 if __name__ == '__main__':
     _loop = asyncio.get_event_loop()
-    start_server(_loop)
-    print(sys.argv)
-    if sys.argv.__len__() > 1 and sys.argv[1] == '--test':
-        test_server(_loop, rand_sleep=False)
+    if sys.argv.__len__() > 1:
+        if sys.argv[1] == '--production':
+            start_server(_loop)
+        elif sys.argv[1] == '--test':
+            test_server(_loop,
+                        rand_sleep=False)
+        else:
+            raise RuntimeError(text="Unknown game mode."
+                                    "Pass --test for test_server."
+                                    "Pass --production for start_server.")
+    else:
+        raise RuntimeError(text="Not defined the game mode in parameters."
+                                "Setup --test parameter for test_server."
+                                "Setup --production parameter for start_server.")
     run_ui()
+    _loop.run_forever()

@@ -13,8 +13,8 @@ class BDManager:
         # Initialize parameters
         self.ROWS = 8
         self.COLS = 8
-        self.WINDOW_WIDTH = 800
-        self.WINDOW_HEIGHT = 800
+        self.WINDOW_WIDTH = 640
+        self.WINDOW_HEIGHT = 640
         self.col_width = self.WINDOW_WIDTH / self.COLS
         self.row_height = self.WINDOW_HEIGHT / self.ROWS
         # Game

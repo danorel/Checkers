@@ -9,28 +9,28 @@ from main import game
 
 class ApiTester:
     def __init__(self, loop, rand_sleep):
-        self._api_url = 'http://localhost:8081'
+        self._api_url = "http://localhost:8081"
+        self._team_name = "Olivyeshka"
         self._session = aiohttp.ClientSession()
         self._game = game
-        self._players = {}
+        self._player = {}
         self._rand_sleep = rand_sleep
         self._loop = loop
 
-    async def _prepare_player(self, num):
+    async def _prepare_player(self):
         async with self._session.post(
                 f'{self._api_url}/game',
-                params={'team_name': num}
+                params={'team_name': self._team_name}
         ) as resp:
             res = (await resp.json())['data']
-            player_num = 1 if res['color'] == 'RED' else 2
-            self._players[player_num] = {
+            self._player = {
                 'color': res['color'],
                 'token': res['token']
             }
 
     async def _make_move(self, player, move):
         json = {'move': move}
-        headers = {'Authorization': f'Token {self._players[player]["token"]}'}
+        headers = {'Authorization': f'Token {self._player[player]["token"]}'}
         async with self._session.post(
                 f'{self._api_url}/move',
                 json=json,
@@ -45,6 +45,7 @@ class ApiTester:
 
     async def _play_game(self):
         current_game_progress = await self._get_game()
+        print(current_game_progress)
         is_finished = current_game_progress['is_finished']
         is_started = current_game_progress['is_started']
 
@@ -72,14 +73,13 @@ class ApiTester:
         logging.info('API Tester initialized, test will start in 2 secs')
         await asyncio.sleep(2.0)
 
-        asyncio.ensure_future(self._prepare_player(1))
-        asyncio.ensure_future(self._prepare_player(2))
+        asyncio.ensure_future(self._prepare_player())
 
-        logging.info('Game started, players initialized')
+        logging.info('Game starter. Player initialized')
 
         await asyncio.sleep(0.5)
 
-        logging.info(f'Players: {self._players}')
+        logging.info(f'Player: {self._player}')
 
         await asyncio.sleep(0.5)
 
