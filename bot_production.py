@@ -15,51 +15,60 @@ class BotProduction:
         self._game = game
         self._player = {}
         self._loop = loop
-        self._player_num = None
 
     async def _prepare_player(self):
-        async with self._session.post(f'{self._api_url}/game',
+        async with self._session.post(f"{self._api_url}/game",
                                       params={'team_name':
                                               self._team_name}) as resp:
             res = (await resp.json())['data']
-            self._player = {'color': res['color'], 'token': res['token']}
+            self._player = {
+                'color': res.get('color'),
+                'token': res.get('token')
+            }
 
-    async def _make_move(self, player, move):
+    async def _make_move(self, move):
         json = {'move': move}
-        headers = {'Authorization': f'Token {self._player[player]["token"]}'}
+        headers = {'Authorization': f'Token {self._player.get("token")}'}
         async with self._session.post(f'{self._api_url}/move',
                                       json=json,
-                                      headers=headers) as resp:
-            resp = (await resp.json())['data']
-            logging.info(f'Player {player} made move {move}, response: {resp}')
+                                      headers=headers) as response:
+            data = (await response.json())['data']
+            logging.info(f'Player {self._player.get("color")} made move {move}, response data: {data}')
 
     async def _get_game(self):
-        async with self._session.get(f'{self._api_url}/game') as resp:
-            return (await resp.json())['data']
+        async with self._session.get(f'{self._api_url}/game') as response:
+            return (await response.json())['data']
 
     async def _play_game(self):
         current_game_progress = await self._get_game()
-        print(current_game_progress)
-        is_finished = current_game_progress['is_finished']
-        is_started = current_game_progress['is_started']
+
+        is_started = current_game_progress.get('is_started')
+        is_finished = current_game_progress.get('is_finished')
 
         while is_started and not is_finished:
-            player_num_turn = 1 if current_game_progress[
-                'whose_turn'] == 'RED' else 2
-            assert self._game.whose_turn() == player_num_turn
+            if current_game_progress.get('whose_turn') != self._player.get('color'):
+
+                current_game_progress = await self._get_game()
+
+                is_started = current_game_progress.get('is_started')
+                is_finished = current_game_progress.get('is_finished')
+
+                await asyncio.sleep(0.1)
+                continue
 
             move = random.choice(self._game.get_possible_moves())
 
-            await self._make_move(player_num_turn, move)
+            await self._make_move(move)
 
-            if self._rand_sleep:
-                await asyncio.sleep(random.uniform(1.0, 3.5))
-            else:
-                await asyncio.sleep(0.2)
+            # evaluating time and deciding which move to do
+            player_num_turn = 1 \
+                if current_game_progress['whose_turn'] == 'RED' \
+                else 2
 
             current_game_progress = await self._get_game()
-            is_finished = current_game_progress['is_finished']
-            is_started = current_game_progress['is_started']
+
+            is_started = current_game_progress.get('is_started')
+            is_finished = current_game_progress.get('is_finished')
 
     def start_test(self):
         asyncio.run_coroutine_threadsafe(self.start(), self._loop)

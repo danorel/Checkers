@@ -199,7 +199,10 @@ class Minimax:
     def __init__(self):
         self.player_num = None
 
-    def find_best_move(self, available_time, game, heuristic):
+    def find_best_move(self,
+                       available_time,
+                       game,
+                       heuristic):
         self.player_num = game.whose_turn()
         start_time = datetime.datetime.now()
         logging.debug(
@@ -223,11 +226,14 @@ class Minimax:
         self.recursive_child_creation(node_init_queue, available_time_to)
         return root
 
-    def recursive_child_creation(self, node_init_queue, available_time_to):
+    def recursive_child_creation(self,
+                                 node_init_queue,
+                                 available_time_to):
         while datetime.datetime.now(
         ) < available_time_to and node_init_queue.qsize() > 0:
             node = node_init_queue.get()
-            self.creating_node_children(node, node_init_queue,
+            self.creating_node_children(node,
+                                        node_init_queue,
                                         available_time_to)
         logging.debug(
             f"End recursive_child_creation on {datetime.datetime.now()}")
@@ -254,7 +260,10 @@ class Minimax:
             if node.value is root_node.value:
                 return node.move
 
-    def iterative_deep_alpha_beta(self, node, alpha, beta):
+    def iterative_deep_alpha_beta(self,
+                                  node,
+                                  alpha,
+                                  beta):
         if len(node.children) == 0:
             node.count_value()
             return node.value

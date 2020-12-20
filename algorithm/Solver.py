@@ -3,34 +3,56 @@ from copy import deepcopy
 from client import Game
 
 
-def next_move(game: Game, depth, maximizing_player, test):
+def next_move(game: Game,
+              depth,
+              maximizing_player,
+              test):
     optimal_move = None
     a = float('-inf')
     for move in game.get_possible_moves():
-        new_game = deepcopy(game)
-        new_game.move(move)
-        b = -_minimax(new_game, depth - 1, new_game.whose_turn(),
-                      maximizing_player, float('-inf'), float('+inf'), test)
+        game_copy = deepcopy(game)
+        game_copy.move(move)
+        b = -_minimax(game=game_copy,
+                      depth=depth - 1,
+                      player_num=game_copy.whose_turn(),
+                      maximizing_player=maximizing_player,
+                      alpha=float('-inf'),
+                      beta=float('+inf'),
+                      test=test)
         if a < b:
             a = b
             optimal_move = move
+
     return optimal_move
 
 
-def _minimax(game: Game, depth, player_num, maximizing_player, alpha, beta,
+def _minimax(game: Game,
+             depth,
+             player_num,
+             maximizing_player,
+             alpha,
+             beta,
              test):
     if depth == 0 or game.is_over():
-        return heuristic(game, maximizing_player, test)
+        return heuristic(game=game,
+                         player_num=maximizing_player,
+                         test=test)
 
     if player_num == maximizing_player:
         value = float('-inf')
         for move in game.get_possible_moves():
-            new_game = deepcopy(game)
-            new_game.move(move)
+            game_copy = deepcopy(game)
+            game_copy.move(move)
             value = max(
                 value,
-                _minimax(new_game, depth - 1, new_game.whose_turn(),
-                         maximizing_player, alpha, beta, test))
+                _minimax(game=game_copy,
+                         depth=depth - 1,
+                         player_num=game_copy.whose_turn(),
+                         maximizing_player=maximizing_player,
+                         alpha=alpha,
+                         beta=beta,
+                         test=test))
+
             alpha = max(alpha, value)
             if alpha >= beta:
                 break
@@ -38,19 +60,26 @@ def _minimax(game: Game, depth, player_num, maximizing_player, alpha, beta,
     else:
         value = float('+inf')
         for move in game.get_possible_moves():
-            new_game = deepcopy(game)
-            new_game.move(move)
+            game_copy = deepcopy(game)
+            game_copy.move(move)
             value = min(
                 value,
-                _minimax(new_game, depth - 1, new_game.whose_turn(),
-                         maximizing_player, alpha, beta, test))
+                _minimax(game=game_copy,
+                         depth=depth - 1,
+                         player_num=game_copy.whose_turn(),
+                         maximizing_player=maximizing_player,
+                         alpha=alpha,
+                         beta=beta,
+                         test=test))
             beta = min(beta, value)
             if beta <= alpha:
                 break
         return value
 
 
-def heuristic(game: Game, player_num, test):
+def heuristic(game: Game,
+              player_num,
+              test):
     our_pieces = game.board.searcher.get_pieces_by_player(player_num)
     enemy_pieces = game.board.searcher.get_pieces_by_player(1 if player_num ==
                                                             2 else 2)
