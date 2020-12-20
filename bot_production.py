@@ -7,15 +7,15 @@ import aiohttp
 from main import game
 
 
-class ApiTester:
-    def __init__(self, loop, rand_sleep):
+class BotProduction:
+    def __init__(self, loop):
         self._api_url = "http://localhost:8081"
         self._team_name = "Olivyeshka"
         self._session = aiohttp.ClientSession()
         self._game = game
         self._player = {}
-        self._rand_sleep = rand_sleep
         self._loop = loop
+        self._player_num = None
 
     async def _prepare_player(self):
         async with self._session.post(

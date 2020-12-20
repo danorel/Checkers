@@ -14,10 +14,16 @@ def start_server(loop):
     threading.Thread(target=main, args=(loop,)).start()
 
 
-def test_server(loop, rand_sleep=False):
-    from api_tester import ApiTester
+def client_test(loop, rand_sleep=False):
+    from bot_test import BotTester
 
-    threading.Thread(target=ApiTester(loop, rand_sleep=rand_sleep).start_test).start()
+    threading.Thread(target=BotTester(loop, rand_sleep=rand_sleep).start_test).start()
+
+
+def client_production(loop):
+    from bot_production import BotProduction
+
+    threading.Thread(target=BotProduction(loop).start_test).start()
 
 
 def run_ui():
@@ -28,11 +34,14 @@ def run_ui():
 
 if __name__ == '__main__':
     _loop = asyncio.get_event_loop()
+    # Run server before client connectivity setup.
+    start_server(_loop)
+    # Run client if modes: test or production.
     if sys.argv.__len__() > 1:
         if sys.argv[1] == '--production':
-            start_server(_loop)
+            client_production(_loop)
         elif sys.argv[1] == '--test':
-            test_server(_loop,
+            client_test(_loop,
                         rand_sleep=False)
         else:
             raise RuntimeError(text="Unknown game mode."
