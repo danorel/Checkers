@@ -1,10 +1,11 @@
 import asyncio
 import logging
 import random
+import time
 
 import aiohttp
 
-from main import game
+from client import game
 
 from algorithm.Minimax import Minimax
 from algorithm.Heuristic import Heuristic
@@ -51,20 +52,22 @@ class BotTester:
     async def _play_game(self):
         current_game_progress = await self._get_game()
 
-        is_finished = current_game_progress['is_finished']
         is_started = current_game_progress['is_started']
+        is_finished = current_game_progress['is_finished']
 
         while is_started and not is_finished:
             if current_game_progress['whose_turn'] != self._player['color']:
+
                 current_game_progress = await self._get_game()
 
-                is_finished = current_game_progress['is_finished']
                 is_started = current_game_progress['is_started']
+                is_finished = current_game_progress['is_finished']
 
                 await asyncio.sleep(0.1)
                 continue
 
             last_move = current_game_progress['last_move']
+            logging.info(f"last_move: {last_move}")
 
             if last_move and last_move['player'] != self._player['color']:
                 for move in last_move['last_moves']:
@@ -74,22 +77,25 @@ class BotTester:
                 if current_game_progress['whose_turn'] == 'RED' \
                 else 2
 
-            best_move = self._game.move(self._find_best_move())
-            print(best_move)
+            time_start = time.time()
+            best_move = self._find_best_move()
+            time_end = time.time()
 
-            move = random.choice(self._game.get_possible_moves())
-            print(move)
+            logging.info(f"Finding best move time: {time_end - time_start}")
 
-            await self._make_move(move)
+            if not best_move:
+                break
 
-            if self._rand_sleep:
-                await asyncio.sleep(random.uniform(1.0, 3.5))
-            else:
-                await asyncio.sleep(0.2)
+            self._game.move(best_move)
+            await self._make_move(best_move)
+
+            # move = random.choice(self._game.get_possible_moves())
+            # logging.info(move)
 
             current_game_progress = await self._get_game()
-            is_finished = current_game_progress['is_finished']
+
             is_started = current_game_progress['is_started']
+            is_finished = current_game_progress['is_finished']
 
     def start_test(self):
         asyncio.run_coroutine_threadsafe(self.start(), self._loop)

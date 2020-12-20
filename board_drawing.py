@@ -1,6 +1,6 @@
 import time
 import tkinter
-from main import game
+from client import game
 import math
 
 

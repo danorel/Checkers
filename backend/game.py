@@ -2,7 +2,7 @@ import asyncio
 import logging
 import secrets
 
-from main import game
+from client import game
 
 
 class GameError(Exception):

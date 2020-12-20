@@ -4,7 +4,7 @@ import random
 
 import aiohttp
 
-from main import game
+from client import game
 
 
 class BotProduction:
