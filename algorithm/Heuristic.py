@@ -5,7 +5,7 @@ def heuristic(game: Game,
               player_num):
     pieces_ours = game.board.searcher.get_pieces_by_player(player_num)
     pieces_enemies = game.board.searcher.get_pieces_by_player(1 if player_num ==
-                                                                 2 else 2)
+                                                                   2 else 2)
 
     kings = filter(lambda p: p.king, pieces_ours)
 
@@ -28,4 +28,4 @@ def heuristic(game: Game,
     m_rows, m_box = len(list(m_rows)), len(list(m_box))
 
     return - (6 * pieces_ours - 1 * pieces_enemies + 6.75 * kings + 5 * back_row +
-             2.5 * m_box + 0.5 * m_rows)
+              2.5 * m_box + 0.5 * m_rows)

@@ -1,7 +1,7 @@
-import time
 import tkinter
-from client import game
 import math
+
+from server import game
 
 
 # Board Drawing manager
@@ -13,8 +13,8 @@ class BDManager:
         # Initialize parameters
         self.ROWS = 8
         self.COLS = 8
-        self.WINDOW_WIDTH = 640
-        self.WINDOW_HEIGHT = 640
+        self.WINDOW_WIDTH = 480
+        self.WINDOW_HEIGHT = 480
         self.col_width = self.WINDOW_WIDTH / self.COLS
         self.row_height = self.WINDOW_HEIGHT / self.ROWS
         # Game
@@ -26,10 +26,7 @@ class BDManager:
 
     def _draw_board_only(self):
         self.root = tkinter.Tk()
-        self.c = tkinter.Canvas(self.root,
-                                width=self.WINDOW_WIDTH,
-                                height=self.WINDOW_HEIGHT,
-                                borderwidth=5,
+        self.c = tkinter.Canvas(self.root, width=self.WINDOW_WIDTH, height=self.WINDOW_HEIGHT, borderwidth=5,
                                 background='white')
         self.c.pack()
         self.tiles = set()
@@ -37,26 +34,15 @@ class BDManager:
         # Print dark square
         for i in range(self.ROWS):
             for j in range(self.COLS):
-                if (i + j) % 2 == 0:
-                    self.c.create_rectangle(i * self.row_height,
-                                            j * self.col_width,
-                                            (i + 1) * self.row_height,
-                                            (j + 1) * self.col_width,
-                                            fill="gray",
+                if (i + j) % 2 == 1:
+                    self.c.create_rectangle(i * self.row_height, j * self.col_width,
+                                            (i + 1) * self.row_height, (j + 1) * self.col_width, fill="gray",
                                             outline="gray")
 
         # Print grid lines
         for i in range(self.ROWS):
-            self.c.create_line(0,
-                               self.row_height * i,
-                               self.WINDOW_WIDTH,
-                               self.row_height * i,
-                               width=2)
-            self.c.create_line(self.col_width * i,
-                               0,
-                               self.col_width * i,
-                               self.WINDOW_HEIGHT,
-                               width=2)
+            self.c.create_line(0, self.row_height * i, self.WINDOW_WIDTH, self.row_height * i, width=2)
+            self.c.create_line(self.col_width * i, 0, self.col_width * i, self.WINDOW_HEIGHT, width=2)
 
         # Place checks on the board
         self.update_board()
@@ -75,17 +61,14 @@ class BDManager:
 
             color = "red" if piece.player == 1 else "black"
             j = piece.get_row()
-            i = piece.get_column() * 2 + 1 if j % 2 == 1 else piece.get_column(
-            ) * 2
-            tile = self.c.create_oval(j * self.col_width + 10,
-                                      i * self.row_height + 10,
-                                      (j + 1) * self.col_width - 10,
-                                      (i + 1) * self.row_height - 10,
+            i = piece.get_column() * 2 + 1 if j % 2 == 0 else piece.get_column() * 2
+            tile = self.c.create_oval(j * self.col_width + 10, i * self.row_height + 10,
+                                      (j + 1) * self.col_width - 10, (i + 1) * self.row_height - 10,
                                       fill=color)
             self.tiles.add(tile)
             self.c.tag_raise(tile)
             if piece.king:
-                self.draw_king_icon(i, j)
+                self.draw_king_icon(i,j)
         # make GUI updates board every second
         self.root.after(1, self.update_board)
 
@@ -95,17 +78,11 @@ class BDManager:
             self.c.tag_raise(tile)
 
         slip = math.sqrt(2) * self.row_height - (self.row_height - 20)
-        left = self.c.create_line(j * self.col_width + slip,
-                                  i * self.row_height + slip,
-                                  (j + 1) * self.col_width - slip,
-                                  (i + 1) * self.row_height - slip,
-                                  width=5,
-                                  fill="white")
+        left =  self.c.create_line(j * self.col_width + slip, i * self.row_height + slip, 
+                                    (j + 1) * self.col_width - slip, (i + 1) * self.row_height - slip,
+                                    width=5, fill="white")
         submit_tile(left)
-        right = self.c.create_line((j + 1) * self.col_width - slip,
-                                   i * self.row_height + slip,
-                                   j * self.col_width + slip,
-                                   (i + 1) * self.row_height - slip,
-                                   width=5,
-                                   fill="white")
+        right =  self.c.create_line((j + 1) * self.col_width - slip, i * self.row_height + slip,  
+                                    j * self.col_width + slip, (i + 1) * self.row_height - slip,
+                                    width=5, fill="white")
         submit_tile(right)

@@ -8,8 +8,7 @@ from .Heuristic import heuristic
 
 def next_move(game: Game,
               depth,
-              maximizing_player,
-              test):
+              maximizing_player):
     optimal_move = None
     a = float('-inf')
     for move in game.get_possible_moves():
@@ -20,8 +19,7 @@ def next_move(game: Game,
                       player_num=game_copy.whose_turn(),
                       maximizing_player=maximizing_player,
                       alpha=float('-inf'),
-                      beta=float('+inf'),
-                      test=test)
+                      beta=float('+inf'))
         if a < b:
             a = b
             optimal_move = move
@@ -34,8 +32,7 @@ def _minimax(game: Game,
              player_num,
              maximizing_player,
              alpha,
-             beta,
-             test):
+             beta):
     if depth == 0 or game.is_over():
         return heuristic(game=game,
                          player_num=maximizing_player)
@@ -52,8 +49,7 @@ def _minimax(game: Game,
                          player_num=game_copy.whose_turn(),
                          maximizing_player=maximizing_player,
                          alpha=alpha,
-                         beta=beta,
-                         test=test))
+                         beta=beta))
 
             alpha = max(alpha, value)
             if alpha >= beta:
@@ -71,12 +67,8 @@ def _minimax(game: Game,
                          player_num=game_copy.whose_turn(),
                          maximizing_player=maximizing_player,
                          alpha=alpha,
-                         beta=beta,
-                         test=test))
+                         beta=beta))
             beta = min(beta, value)
             if beta <= alpha:
                 break
         return value
-
-
-

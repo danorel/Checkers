@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import sys
 
 from aiohttp import web
 
@@ -33,11 +32,14 @@ def main(loop):
 
     runner = web.AppRunner(app)
     loop.run_until_complete(runner.setup())
-    site = web.TCPSite(runner, host=config['host'], port=config['port'])
+    site = web.TCPSite(
+        runner,
+        host=config['host'],
+        port=config['port']
+    )
     loop.run_until_complete(site.start())
 
-    logging.info(
-        f'Server started at: http://{config["host"]}:{config["port"]}')
+    logging.info(f'Server started at: http://{config["host"]}:{config["port"]}')
 
     loop.run_forever()
 

@@ -1,7 +1,5 @@
 import asyncio
 import logging
-import random
-import time
 
 import aiohttp
 
@@ -64,9 +62,9 @@ class BotTester:
 
                 logging.info(f"Move from server: {last_move}")
 
-                for m in last_move:
-                    if m not in self._last_move:
-                        moves.append(m)
+                for move in last_move:
+                    if move not in self._last_move:
+                        moves.append(move)
 
                 for move in moves:
                     self._game.move(move)
@@ -75,14 +73,13 @@ class BotTester:
 
             if self._player.get('color') == game_progress.get('whose_turn'):
                 # Evaluating time and deciding which move to do
-                player_num_turn = 1 \
+                maximizing_player = 1 \
                     if game_progress.get('whose_turn') == 'RED' \
                     else 2
 
                 move = next_move(game=self._game,
                                  depth=4,
-                                 maximizing_player=player_num_turn,
-                                 test=False)
+                                 maximizing_player=maximizing_player)
                 await self._make_move(move)
 
             game_progress = await self._get_game()

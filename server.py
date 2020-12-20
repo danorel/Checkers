@@ -2,13 +2,16 @@ import asyncio
 import logging
 import threading
 
+from monkey_patched.game import Game
+
+# Init components
+game = Game()
+
 
 def start_server(loop):
     from backend.server import main
 
-    threading \
-        .Thread(target=main, args=(loop,)) \
-        .start()
+    threading.Thread(target=main, args=(loop,)).start()
 
 
 def run_ui():
