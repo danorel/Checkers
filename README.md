@@ -1,5 +1,11 @@
-# foai-checkers-server
-Server for Checkers contest as an exam for Fundamentals of AI course at NaUKMA
+# Chekers-Olivyeshka
+AI program meant for checkers contest as an exam for Fundamentals of AI course at NaUKMA
+
+## What were the responsibilities:
+1. Creating a board game_drawing.py, connecting to the bot_production.py server, testing bot_test.py - Perch O.
+2. The first version of the MinMax algorithm with alpha-beta prunning Solver.py, Heuristic.py, testing, client.py - Orel D.
+3. Algorithm modification, testing the coefficients of heuristics - Orel D., Perch O.
+
 
 ## How to run server
 1. Install `python 3` and `pip` from https://www.python.org/downloads/.
