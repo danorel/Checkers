@@ -7,6 +7,7 @@ import aiohttp
 
 from client import game
 
+from algorithm.Solver import next_move
 from algorithm.Minimax import Minimax
 from algorithm.Heuristic import Heuristic
 
@@ -67,7 +68,7 @@ class BotTester:
                 continue
 
             last_move = current_game_progress['last_move']
-            logging.info(f"last_move: {last_move}")
+            logging.debug(f"last_move: {last_move}")
 
             if last_move and last_move['player'] != self._player['color']:
                 for move in last_move['last_moves']:
@@ -78,10 +79,11 @@ class BotTester:
                 else 2
 
             time_start = time.time()
-            best_move = self._find_best_move()
+            # best_move = self._find_best_move()
+            best_move = next_move(self._game, 4, player_num_turn, True)
             time_end = time.time()
 
-            logging.info(f"Finding best move time: {time_end - time_start}")
+            logging.debug(f"Finding best move time: {time_end - time_start}")
 
             if not best_move:
                 break

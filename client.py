@@ -1,11 +1,18 @@
 import asyncio
 import sys
+import logging
 import threading
 
 from monkey_patched.game import Game
 
 # Init components
 game = Game()
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 
 def client_test(loop, rand_sleep=False):
@@ -19,7 +26,9 @@ def client_test(loop, rand_sleep=False):
 def client_production(loop):
     from bot_production import BotProduction
 
-    threading.Thread(target=BotProduction(loop).start_test).start()
+    threading \
+        .Thread(target=BotProduction(loop).start_test) \
+        .start()
 
 
 def run_ui():
