@@ -22,5 +22,3 @@ if __name__ == '__main__':
     start_server(_loop)
     # Run user interface for checkers.
     run_ui()
-    # Run server forever.
-    _loop.run_forever()

@@ -13,11 +13,11 @@ logging.basicConfig(level=logging.DEBUG,
                     datefmt='%Y-%m-%d %H:%M:%S')
 
 
-def client_test(loop, rand_sleep=False):
+def client_test(loop):
     from bot_test import BotTester
 
     threading \
-        .Thread(target=BotTester(loop, rand_sleep=rand_sleep).start_test) \
+        .Thread(target=BotTester(loop).start_test) \
         .start()
 
 
@@ -42,7 +42,7 @@ if __name__ == '__main__':
         if sys.argv[1] == '--production':
             client_production(_loop)
         elif sys.argv[1] == '--test':
-            client_test(_loop, rand_sleep=False)
+            client_test(_loop)
         else:
             raise RuntimeError("Unknown game mode."
                                "Pass --test for test_server."
