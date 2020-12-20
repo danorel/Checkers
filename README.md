@@ -1,5 +1,11 @@
-# foai-checkers-server
+# Chekers-Olivyeshka
 Server for Checkers contest as an exam for Fundamentals of AI course at NaUKMA
+
+## What were the responsibilities:
+1. Creating a board game_drawing.py, connecting to the bot_production.py server, testing bot_test.py - Perch O.
+2. The first version of the MinMax algorithm with alpha-beta prunning Solver.py, Heuristic.py, testing, client.py - Orel D.
+3. Algorithm modification, testing the coefficients of heuristics - Orel D., Perch O.
+
 
 ## How to run server
 1. Install `python 3` and `pip` from https://www.python.org/downloads/.
@@ -9,8 +15,3 @@ Server for Checkers contest as an exam for Fundamentals of AI course at NaUKMA
 > If you have both python 2 and python 3 in your OS, you may want to use `python3` for commands stated above.
 
 > **Note:** Default server host/port is `127.0.0.1:8081`. If you want to run server on non-default host/port, you may change any of these values at `config/checkers-back.yaml`. 
-
-## What were the responsibilities:
-1. Creating a board game_drawing.py, connecting to the bot_production.py server, testing bot_test.py - Perch O.
-2. The first version of the MinMax algorithm with alpha-beta prunning Solver.py, Heuristic.py, testing, client.py - Orel D.
-3. Algorithm modification, testing the coefficients of heuristics - Orel D., Perch O.
