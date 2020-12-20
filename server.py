@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import threading
 
 
@@ -17,6 +18,9 @@ def run_ui():
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
     _loop = asyncio.get_event_loop()
     # Run server before client connectivity setup.
     start_server(_loop)

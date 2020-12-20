@@ -8,10 +8,6 @@ from monkey_patched.game import Game
 # Init components
 game = Game()
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s - %(levelname)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
-
 
 def client_test(loop):
     from bot_test import BotTester
@@ -29,13 +25,10 @@ def client_production(loop):
         .start()
 
 
-def run_ui():
-    from board_drawing import BDManager
-
-    BDManager()
-
-
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG,
+                        format='%(asctime)s - %(levelname)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
     _loop = asyncio.get_event_loop()
     # Run client in modes: test or production.
     if sys.argv.__len__() > 1:
