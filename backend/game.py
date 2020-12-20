@@ -26,10 +26,7 @@ class Game:
         self._available_current_move_time = self._available_move_time
         self._players = {}
         self._lost_time_player = None
-        self._colors_table = {
-            1: 'RED',
-            2: 'BLACK'
-        }
+        self._colors_table = {1: 'RED', 2: 'BLACK'}
 
     def _whose_turn(self):
         return self._colors_table[self._game.whose_turn()]
@@ -46,7 +43,8 @@ class Game:
             return self._colors_table[1] \
                 if self._lost_time_player == 2 \
                 else self._colors_table[2]
-        return self._colors_table[self._game.get_winner()] if self._game.get_winner() else None
+        return self._colors_table[
+            self._game.get_winner()] if self._game.get_winner() else None
 
     def _board(self):
         output = []
@@ -70,18 +68,12 @@ class Game:
         player_num = 2 if 1 in self._players else 1
 
         token = secrets.token_hex(16)
-        self._players[player_num] = {
-            'token': token,
-            'team_name': team_name
-        }
+        self._players[player_num] = {'token': token, 'team_name': team_name}
 
         if 1 in self._players and 2 in self._players:
             asyncio.ensure_future(self.start())
 
-        return {
-            'color': self._colors_table[player_num],
-            'token': token
-        }
+        return {'color': self._colors_table[player_num], 'token': token}
 
     async def start(self):
         logging.info('...GAME IS STARTED...')

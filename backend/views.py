@@ -11,10 +11,7 @@ class Views:
 
     @staticmethod
     def _prepare_response(data):
-        return web.json_response({
-            'status': 'success',
-            'data': data
-        })
+        return web.json_response({'status': 'success', 'data': data})
 
     @staticmethod
     async def health_check(_request):
@@ -28,8 +25,7 @@ class Views:
             team_name = request.query['team_name']
         except KeyError:
             raise web.HTTPBadRequest(
-                text='team_name query parameter is missing'
-            )
+                text='team_name query parameter is missing')
 
         response = self._game.add_player(team_name)
 
@@ -50,8 +46,7 @@ class Views:
 
         except KeyError as exc:
             raise web.HTTPUnauthorized(
-                headers={"WWW-Authenticate": "Token"}
-            ) from exc
+                headers={"WWW-Authenticate": "Token"}) from exc
 
         token = header.split()[1]
         try:
@@ -59,9 +54,7 @@ class Views:
             move = body['move']
 
         except KeyError:
-            raise web.HTTPBadRequest(
-                text='move parameter is missing'
-            )
+            raise web.HTTPBadRequest(text='move parameter is missing')
 
         try:
             self._game.move(token, move)
@@ -69,23 +62,14 @@ class Views:
 
         except ForbiddenMoveError:
             raise web.HTTPForbidden(
-                text='invalid token for current player move'
-            )
+                text='invalid token for current player move')
         except MoveIsNotPossible as e:
-            raise web.HTTPBadRequest(
-                text=str(e)
-            )
+            raise web.HTTPBadRequest(text=str(e))
 
     def configure(self, app):
-        app.router.add_get(
-            '/health_check', self.health_check, name='health_check'
-        )
-        app.router.add_get(
-            '/game', self.game, name='get_game'
-        )
-        app.router.add_post(
-            '/game', self.connect, name='connect_to_the_game'
-        )
-        app.router.add_post(
-            '/move', self.move, name='make_game_move'
-        )
+        app.router.add_get('/health_check',
+                           self.health_check,
+                           name='health_check')
+        app.router.add_get('/game', self.game, name='get_game')
+        app.router.add_post('/game', self.connect, name='connect_to_the_game')
+        app.router.add_post('/move', self.move, name='make_game_move')

@@ -47,7 +47,8 @@ class Node:
             if piece.captured:
                 continue
             column = piece.get_row()
-            row = piece.get_column() * 2 + 1 if row % 2 == 0 else piece.get_column() * 2
+            row = piece.get_column(
+            ) * 2 + 1 if row % 2 == 0 else piece.get_column() * 2
             if piece.king:
                 if piece.player == self.player:
                     num_dif_kings += 1
@@ -101,12 +102,10 @@ class Node:
             dif_kings_corner = self.king_in_corner(2) - self.king_in_corner(1)
 
         res = self.heuristic.count_heuristic(
-            num_dif_pawns, num_dif_kings,
-            num_dif_on_edge_pawn, num_dif_on_edge_king,
-            num_dif_defend_pieces, num_dif_on_top_three,
-            num_dif_center_king, num_dif_center_pawn,
-            dif_triangle, dif_bridge, dif_dog, dif_oreo, dif_kings_corner
-        )
+            num_dif_pawns, num_dif_kings, num_dif_on_edge_pawn,
+            num_dif_on_edge_king, num_dif_defend_pieces, num_dif_on_top_three,
+            num_dif_center_king, num_dif_center_pawn, dif_triangle, dif_bridge,
+            dif_dog, dif_oreo, dif_kings_corner)
         return res
 
     def adjacent_to_the_edge(self, i, j):
@@ -154,14 +153,18 @@ class Node:
     # white on 1 2 6 / black on 27 31 32
     def triangle(self, player):
         if player == 1:
-            return self.on_position_white(1) and self.on_position_white(2) and self.on_position_white(6)
-        return self.on_position_black(27) and self.on_position_black(31) and self.on_position_black(32)
+            return self.on_position_white(1) and self.on_position_white(
+                2) and self.on_position_white(6)
+        return self.on_position_black(27) and self.on_position_black(
+            31) and self.on_position_black(32)
 
     # white on 2 3 7 / black on 26 30 31
     def oreo(self, player):
         if player == 1:
-            return self.on_position_white(2) and self.on_position_white(3) and self.on_position_white(7)
-        return self.on_position_black(26) and self.on_position_black(30) and self.on_position_black(31)
+            return self.on_position_white(2) and self.on_position_white(
+                3) and self.on_position_white(7)
+        return self.on_position_black(26) and self.on_position_black(
+            30) and self.on_position_black(31)
 
     # white on 1 3 / black on 30, 32
     def bridge(self, player):
@@ -199,26 +202,35 @@ class Minimax:
     def find_best_move(self, available_time, game, heuristic):
         self.player_num = game.whose_turn()
         start_time = datetime.datetime.now()
-        logging.debug(f"Try _find_best_move start_time = {start_time}, available_time = {available_time}")
-        root_node = self.create_tree(game, start_time + datetime.timedelta(milliseconds=(available_time * 0.8) * 1000),
-                                     heuristic)
+        logging.debug(
+            f"Try _find_best_move start_time = {start_time}, available_time = {available_time}"
+        )
+        root_node = self.create_tree(
+            game, start_time +
+            datetime.timedelta(milliseconds=(available_time * 0.8) * 1000),
+            heuristic)
         best_move = self.choice_best_move(root_node)
         logging.debug(f"Return best move({best_move})")
         return best_move
 
     def create_tree(self, game, available_time_to, heuristic):
-        logging.debug(f"Try create_tree, available_time_to = {available_time_to}")
-        root = Node(game, None, self.player_num, 2 if self.player_num == 1 else 1, heuristic)
+        logging.debug(
+            f"Try create_tree, available_time_to = {available_time_to}")
+        root = Node(game, None, self.player_num,
+                    2 if self.player_num == 1 else 1, heuristic)
         node_init_queue = Queue(maxsize=99999999)
         node_init_queue.put(root)
         self.recursive_child_creation(node_init_queue, available_time_to)
         return root
 
     def recursive_child_creation(self, node_init_queue, available_time_to):
-        while datetime.datetime.now() < available_time_to and node_init_queue.qsize() > 0:
+        while datetime.datetime.now(
+        ) < available_time_to and node_init_queue.qsize() > 0:
             node = node_init_queue.get()
-            self.creating_node_children(node, node_init_queue, available_time_to)
-        logging.debug(f"End recursive_child_creation on {datetime.datetime.now()}")
+            self.creating_node_children(node, node_init_queue,
+                                        available_time_to)
+        logging.debug(
+            f"End recursive_child_creation on {datetime.datetime.now()}")
 
     def creating_node_children(self, node, node_init_queue, available_time_to):
         #logging.debug(f"All moves {node.game.get_possible_moves()}")
@@ -228,7 +240,8 @@ class Minimax:
             copy_game = deepcopy(node.game)
             player_moved = copy_game.whose_turn()
             copy_game.move(move)
-            new_node = Node(copy_game, move, self.player_num, player_moved, node.heuristic)
+            new_node = Node(copy_game, move, self.player_num, player_moved,
+                            node.heuristic)
             node.add_children(new_node)
             if copy_game.is_over():
                 continue
@@ -248,14 +261,18 @@ class Minimax:
         if node.player_moved is not self.player_num:
             node.value = -1000
             for child in node.children:
-                node.value = max(node.value, self.iterative_deep_alpha_beta(child, alpha, beta))
+                node.value = max(
+                    node.value,
+                    self.iterative_deep_alpha_beta(child, alpha, beta))
                 alpha = max(alpha, node.value)
                 if alpha > beta:
                     break
         else:
             node.value = 1000
             for child in node.children:
-                node.value = min(node.value, self.iterative_deep_alpha_beta(child, alpha, beta))
+                node.value = min(
+                    node.value,
+                    self.iterative_deep_alpha_beta(child, alpha, beta))
                 beta = min(alpha, node.value)
                 if beta < alpha:
                     break

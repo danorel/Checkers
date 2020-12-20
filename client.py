@@ -8,11 +8,9 @@ from monkey_patched.game import Game
 # Init components
 game = Game()
 
-logging.basicConfig(
-    level=logging.DEBUG,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S'
-)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 
 def client_test(loop, rand_sleep=False):
@@ -44,8 +42,7 @@ if __name__ == '__main__':
         if sys.argv[1] == '--production':
             client_production(_loop)
         elif sys.argv[1] == '--test':
-            client_test(_loop,
-                        rand_sleep=False)
+            client_test(_loop, rand_sleep=False)
         else:
             raise RuntimeError("Unknown game mode."
                                "Pass --test for test_server."

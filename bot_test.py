@@ -25,26 +25,22 @@ class BotTester:
         self._player_num = None
 
     async def _prepare_player(self):
-        async with self._session.post(
-                f'{self._api_url}/game',
-                params={'team_name': self._team_name}
-        ) as resp:
+        async with self._session.post(f'{self._api_url}/game',
+                                      params={'team_name':
+                                              self._team_name}) as resp:
             res = (await resp.json())['data']
-            self._player = {
-                'color': res['color'],
-                'token': res['token']
-            }
+            self._player = {'color': res['color'], 'token': res['token']}
 
     async def _make_move(self, move):
         json = {'move': move}
         headers = {'Authorization': f'Token {self._player.get("token")}'}
-        async with self._session.post(
-                f'{self._api_url}/move',
-                json=json,
-                headers=headers
-        ) as resp:
+        async with self._session.post(f'{self._api_url}/move',
+                                      json=json,
+                                      headers=headers) as resp:
+            logging.debug(f"A try to make movement: {await resp.text()}")
             resp = (await resp.json())['data']
-            logging.info(f'Player {self._player} made move {move}, response: {resp}')
+            logging.info(
+                f'Player {self._player} made move {move}, response: {resp}')
 
     async def _get_game(self):
         async with self._session.get(f'{self._api_url}/game') as resp:
@@ -59,7 +55,8 @@ class BotTester:
         is_finished = current_game_progress.get('is_finished')
 
         while is_started and not is_finished:
-            if current_game_progress.get('whose_turn') != self._player.get('color'):
+            if current_game_progress.get('whose_turn') != self._player.get(
+                    'color'):
 
                 current_game_progress = await self._get_game()
 
@@ -69,15 +66,18 @@ class BotTester:
                 await asyncio.sleep(0.1)
                 continue
 
-            logging.info(f"Last move: {current_game_progress.get('last_move', None)}")
-
             last_move = current_game_progress.get('last_move', None)
-            logging.debug(f"last_move: {last_move}")
+            logging.debug(
+                f"Last move: {current_game_progress.get('last_move', None)}")
 
-            if last_move and last_move.get('player') != self._player.get('color'):
+            if last_move and last_move.get('player') != self._player.get(
+                    'color'):
                 for move in last_move.get('last_moves'):
                     logging.debug(f'Applying last move: {move}')
                     self._game.move(move)
+
+            logging.debug(
+                f"Whose turn: {current_game_progress.get('whose_turn')}")
 
             player_num_turn = 1 \
                 if current_game_progress.get('whose_turn') == 'RED' \
@@ -128,6 +128,8 @@ class BotTester:
         await self._session.close()
 
     def _find_best_move(self):
-        logging.info(f"Try find best local move with available time: {self._time_to_move}")
+        logging.info(
+            f"Try find best local move with available time: {self._time_to_move}"
+        )
         return Minimax() \
             .find_best_move(self._time_to_move, game, Heuristic(1, 1, 1, 1, 0, 0))

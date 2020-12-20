@@ -27,20 +27,11 @@ class Heuristic:
         self.cof_dif_oreo = cof_dif_oreo
         self.cof_dif_kings_corner = cof_dif_kings_corner
 
-    def count_heuristic(self,
-                        num_dif_pawns,
-                        num_dif_kings,
-                        num_dif_on_edge_pawn,
-                        num_dif_on_edge_king,
-                        num_dif_defend_pieces,
-                        num_dif_on_top_three,
-                        num_dif_center_king,
-                        num_dif_center_pawn,
-                        dif_triangle,
-                        dif_bridge,
-                        dif_dog,
-                        dif_oreo,
-                        dif_kings_corner):
+    def count_heuristic(self, num_dif_pawns, num_dif_kings,
+                        num_dif_on_edge_pawn, num_dif_on_edge_king,
+                        num_dif_defend_pieces, num_dif_on_top_three,
+                        num_dif_center_king, num_dif_center_pawn, dif_triangle,
+                        dif_bridge, dif_dog, dif_oreo, dif_kings_corner):
         heuristic = 0
         heuristic += self.cof_dif_pawns * num_dif_pawns
         heuristic += self.cof_dif_kings * num_dif_kings
