@@ -37,7 +37,7 @@ class BotTester:
 
     async def _make_move(self, move):
         json = {'move': move}
-        headers = {'Authorization': f'Token {self._player["token"]}'}
+        headers = {'Authorization': f'Token {self._player.get("token")}'}
         async with self._session.post(
                 f'{self._api_url}/move',
                 json=json,
@@ -53,34 +53,41 @@ class BotTester:
     async def _play_game(self):
         current_game_progress = await self._get_game()
 
-        is_started = current_game_progress['is_started']
-        is_finished = current_game_progress['is_finished']
+        logging.info(f"Current game progress: {current_game_progress}")
+
+        is_started = current_game_progress.get('is_started')
+        is_finished = current_game_progress.get('is_finished')
 
         while is_started and not is_finished:
-            if current_game_progress['whose_turn'] != self._player['color']:
+            if current_game_progress.get('whose_turn') != self._player.get('color'):
 
                 current_game_progress = await self._get_game()
 
-                is_started = current_game_progress['is_started']
-                is_finished = current_game_progress['is_finished']
+                is_started = current_game_progress.get('is_started')
+                is_finished = current_game_progress.get('is_finished')
 
                 await asyncio.sleep(0.1)
                 continue
 
-            last_move = current_game_progress['last_move']
+            logging.info(f"Last move: {current_game_progress.get('last_move', None)}")
+
+            last_move = current_game_progress.get('last_move', None)
             logging.debug(f"last_move: {last_move}")
 
-            if last_move and last_move['player'] != self._player['color']:
-                for move in last_move['last_moves']:
+            if last_move and last_move.get('player') != self._player.get('color'):
+                for move in last_move.get('last_moves'):
+                    logging.debug(f'Applying last move: {move}')
                     self._game.move(move)
 
             player_num_turn = 1 \
-                if current_game_progress['whose_turn'] == 'RED' \
+                if current_game_progress.get('whose_turn') == 'RED' \
                 else 2
+            logging.debug(f"Player number turn: {player_num_turn}")
 
             time_start = time.time()
             # best_move = self._find_best_move()
             best_move = next_move(self._game, 4, player_num_turn, True)
+            logging.debug(f"Best move: {best_move}")
             time_end = time.time()
 
             logging.debug(f"Finding best move time: {time_end - time_start}")
@@ -91,13 +98,10 @@ class BotTester:
             self._game.move(best_move)
             await self._make_move(best_move)
 
-            # move = random.choice(self._game.get_possible_moves())
-            # logging.info(move)
-
             current_game_progress = await self._get_game()
 
-            is_started = current_game_progress['is_started']
-            is_finished = current_game_progress['is_finished']
+            is_started = current_game_progress.get('is_started')
+            is_finished = current_game_progress.get('is_finished')
 
     def start_test(self):
         asyncio.run_coroutine_threadsafe(self.start(), self._loop)
