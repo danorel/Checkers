@@ -18,7 +18,7 @@ class BotTester:
         self._game = game
         self._loop = loop
         self._player = {}
-        self._last_move = None
+        self._last_move = []
         self._time_to_move = 3.2
 
     async def _prepare_player(self):
@@ -46,6 +46,7 @@ class BotTester:
             logging.debug(f"A try to connect to game: {await response.json()}")
             return (await response.json())['data']
 
+    """
     async def _play_game(self):
 
         # Read the starter game progress.
@@ -75,7 +76,7 @@ class BotTester:
                 for move in last_move.get('last_moves'):
                     self._game.move(move)
 
-            # evaluating time and deciding which move to do
+            # Evaluating time and deciding which move to do
             player_num_turn = 1 \
                 if game_progress.get('whose_turn') == 'RED' \
                 else 2
@@ -95,6 +96,53 @@ class BotTester:
 
             is_started = game_progress.get('is_started')
             is_finished = game_progress.get('is_finished')
+    """
+
+    async def _play_game(self):
+
+        game_progress = await self._get_game()
+
+        is_started = game_progress.get('is_started')
+        is_finished = game_progress.get('is_finished')
+
+        while is_started and not is_finished:
+            if game_progress.get('last_move') is not None and \
+               game_progress.get('last_move', {}).get('last_moves', []) != self._last_move:
+                moves = []
+
+                last_move = game_progress \
+                    .get('last_move', {}) \
+                    .get('last_moves', [])
+
+                logging.info(f"Move from server: {last_move}")
+
+                for m in last_move:
+                    if m not in self._last_move:
+                        moves.append(m)
+
+                for move in moves:
+                    self._game.move(move)
+
+                self._last_move = moves
+
+            if self._player.get('color') == game_progress.get('whose_turn'):
+                # Evaluating time and deciding which move to do
+                player_num_turn = 1 \
+                    if game_progress.get('whose_turn') == 'RED' \
+                    else 2
+
+                move = next_move(game=self._game,
+                                 depth=4,
+                                 maximizing_player=player_num_turn,
+                                 test=False)
+                await self._make_move(move)
+
+            game_progress = await self._get_game()
+
+            is_finished = game_progress.get('is_finished')
+            is_started = game_progress.get('is_started')
+
+            await asyncio.sleep(0.2)
 
     def start_test(self):
         asyncio.run_coroutine_threadsafe(self.start(), self._loop)
