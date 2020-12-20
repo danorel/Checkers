@@ -1,5 +1,5 @@
 # Chekers-Olivyeshka
-Server for Checkers contest as an exam for Fundamentals of AI course at NaUKMA
+AI program meant for checkers contest as an exam for Fundamentals of AI course at NaUKMA
 
 ## What were the responsibilities:
 1. Creating a board game_drawing.py, connecting to the bot_production.py server, testing bot_test.py - Perch O.
