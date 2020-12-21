@@ -17,7 +17,6 @@ class BotProduction:
         self._loop = loop
         self._player = {}
         self._last_move = []
-        self._time_to_move = 3.2
 
     async def _prepare_player(self):
         async with self._session.post(f'{self._api_url}/game',
@@ -79,7 +78,8 @@ class BotProduction:
 
                 move = next_move(game=self._game,
                                  depth=5,
-                                 maximizing_player=maximizing_player)
+                                 maximizing_player=maximizing_player,
+                                 available_time=game_progress.get('available_time'))
                 await self._make_move(move)
 
             game_progress = await self._get_game()
