@@ -78,7 +78,7 @@ class BotProduction:
                 else 2
 
             move = next_move(game=self._game,
-                             depth=5,
+                             depth=4,
                              maximizing_player=player_num_turn,
                              available_time=game_progress.get('available_time'))
 
