@@ -116,20 +116,20 @@ def heuristic(game: Game,
     pieces_ours = game.board.searcher.get_pieces_by_player(player_turn)
     pieces_enemies = game.board.searcher.get_pieces_by_player(enemy_turn)
 
-    return - (3    * heuristic_pieces_ours(pieces_ours) -
-              3    * heuristic_pieces_enemies(pieces_enemies) +
+    return - (2    * heuristic_pieces_ours(pieces_ours) -
+              2    * heuristic_pieces_enemies(pieces_enemies) +
               3    * heuristic_movable_pieces_ours(game, player_turn) -
               3    * heuristic_movable_pieces_enemies(game, enemy_turn) +
               5    * heuristic_king_amount(pieces_ours) -
               5    * heuristic_king_amount(pieces_enemies) +
-              2    * heuristic_back_rows(pieces_ours, player_turn) -
-              2    * heuristic_back_rows(pieces_enemies, enemy_turn) +
-              2    * heuristic_middle_box(pieces_ours, player_turn) -
-              2    * heuristic_middle_box(pieces_enemies, enemy_turn) +
-              1.5  * heuristic_middle_rows(pieces_ours, player_turn) -
-              1.5  * heuristic_middle_rows(pieces_enemies, enemy_turn) +
-              0.25 * heuristic_king_in_corner(game, player_turn) -
-              0.25 * heuristic_king_in_corner(game, enemy_turn) +
+              2.5  * heuristic_back_rows(pieces_ours, player_turn) -
+              2.5  * heuristic_back_rows(pieces_enemies, enemy_turn) +
+              1.5  * heuristic_middle_box(pieces_ours, player_turn) -
+              1.5  * heuristic_middle_box(pieces_enemies, enemy_turn) +
+              2    * heuristic_middle_rows(pieces_ours, player_turn) -
+              2    * heuristic_middle_rows(pieces_enemies, enemy_turn) +
+              0.5  * heuristic_king_in_corner(game, player_turn) -
+              0.5  * heuristic_king_in_corner(game, enemy_turn) +
               0.75 * heuristic_bridge(game, player_turn) -
               0.75 * heuristic_bridge(game, enemy_turn) +
               0.75 * heuristic_oreo(game, player_turn) -
