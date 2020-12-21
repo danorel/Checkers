@@ -94,7 +94,7 @@ class BotTester:
 
     async def start(self):
         try:
-            logging.info('API Bot Testing initialized. Test will start now')
+            logging.info('API Bot Testing initialized. Test will start over 2s')
             await asyncio.sleep(2.0)
 
             await asyncio.ensure_future(self._prepare_player())

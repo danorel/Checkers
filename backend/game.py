@@ -23,7 +23,7 @@ class Game:
         self._game = game
         self._is_started = False
         self._is_finished = False
-        self._available_move_time = 3.2  # 200 ms plus, cause for network latency
+        self._available_move_time = 10.2  # 200 ms plus, cause for network latency
         self._available_current_move_time = self._available_move_time
         self._players = {}
         self._lost_time_player = None

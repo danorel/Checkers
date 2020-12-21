@@ -14,10 +14,10 @@ def next_move(game: Game,
               depth,
               maximizing_player,
               available_time):
-    logging.debug(f"available_time: {available_time}")
+    logging.debug(f"Available time to move: {available_time}")
     # Calculate the terminate time.
-    terminate_time = datetime.datetime.now() + datetime.timedelta(milliseconds=(available_time * 0.85) * 1000)
-    logging.debug(f"terminate_time: {terminate_time}")
+    terminate_time = datetime.datetime.now() + datetime.timedelta(milliseconds=(available_time * 0.80) * 1000)
+    logging.debug(f"Terminate date to next move: {terminate_time}")
     # Extract all available moves.
     available_moves = game.get_possible_moves()
     # Extract one random move for time-calculations safety.
@@ -84,6 +84,6 @@ def _minimax(game: Game,
                          alpha=alpha,
                          beta=beta))
             beta = min(beta, value)
-            if beta <= alpha:
+            if alpha >= beta:
                 break
         return value

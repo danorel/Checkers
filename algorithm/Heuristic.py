@@ -93,6 +93,11 @@ def heuristic_pieces_ours(pieces_ours):
     return len(pieces_ours)
 
 
+# White/Black amount of our movable pieces
+def heuristic_movable_pieces_ours(game, player_turn):
+    return game.board.count_movable_player_pieces(player_turn) / 12
+
+
 # White/Black amount of enemy pieces
 def heuristic_pieces_enemies(pieces_enemies):
     return len(pieces_enemies)
@@ -106,8 +111,13 @@ def heuristic(game: Game,
 
     return - (3    * heuristic_pieces_ours(pieces_ours) -
               1    * heuristic_pieces_enemies(pieces_enemies) +
-              5    * heuristic_king_amount(pieces_ours) +
+              4    * heuristic_movable_pieces_ours(game, player_turn) +
+              6    * heuristic_king_amount(pieces_ours) +
               2    * heuristic_back_rows(pieces_ours, player_turn) +
-              1.5  * heuristic_middle_box(pieces_ours, player_turn) +
-              1    * heuristic_middle_rows(pieces_ours, player_turn) +
-              0.25 * heuristic_king_in_corner(game, player_turn))
+              2    * heuristic_middle_box(pieces_ours, player_turn) +
+              1.5  * heuristic_middle_rows(pieces_ours, player_turn) +
+              0.25 * heuristic_king_in_corner(game, player_turn) +
+              0.75 * heuristic_bridge(game, player_turn) +
+              0.75 * heuristic_oreo(game, player_turn) +
+              0.75 * heuristic_dog(game, player_turn) +
+              0.75 * heuristic_triangle(game, player_turn))
