@@ -1,7 +1,7 @@
 # Chekers-Olivyeshka
 AI program meant for checkers contest as an exam for Fundamentals of AI course at NaUKMA
 
-Command to run the client: ```python3 client.py --production```
+Command to run the client: ```python3 client.py --production```<br/>
 Command to run the server: ```python3 server.py```
 
 ## What were the responsibilities:
