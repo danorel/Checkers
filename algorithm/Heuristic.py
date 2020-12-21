@@ -98,6 +98,11 @@ def heuristic_movable_pieces_ours(game, player_turn):
     return game.board.count_movable_player_pieces(player_turn) / 12
 
 
+# White/Black amount of enemies movable pieces
+def heuristic_movable_pieces_enemies(game, enemy_turn):
+    return game.board.count_movable_player_pieces(enemy_turn) / 12
+
+
 # White/Black amount of enemy pieces
 def heuristic_pieces_enemies(pieces_enemies):
     return len(pieces_enemies)
@@ -105,19 +110,31 @@ def heuristic_pieces_enemies(pieces_enemies):
 
 def heuristic(game: Game,
               player_turn):
+    # Calculate the enemy turn based on our turn value
+    enemy_turn = 1 if player_turn == 2 else 2
+
     pieces_ours = game.board.searcher.get_pieces_by_player(player_turn)
-    pieces_enemies = game.board.searcher.get_pieces_by_player(1 if player_turn == 2
-                                                                else 2)
+    pieces_enemies = game.board.searcher.get_pieces_by_player(enemy_turn)
 
     return - (3    * heuristic_pieces_ours(pieces_ours) -
-              1    * heuristic_pieces_enemies(pieces_enemies) +
-              4    * heuristic_movable_pieces_ours(game, player_turn) +
-              6    * heuristic_king_amount(pieces_ours) +
-              2    * heuristic_back_rows(pieces_ours, player_turn) +
-              2    * heuristic_middle_box(pieces_ours, player_turn) +
-              1.5  * heuristic_middle_rows(pieces_ours, player_turn) +
-              0.25 * heuristic_king_in_corner(game, player_turn) +
-              0.75 * heuristic_bridge(game, player_turn) +
-              0.75 * heuristic_oreo(game, player_turn) +
-              0.75 * heuristic_dog(game, player_turn) +
-              0.75 * heuristic_triangle(game, player_turn))
+              3    * heuristic_pieces_enemies(pieces_enemies) +
+              3    * heuristic_movable_pieces_ours(game, player_turn) -
+              3    * heuristic_movable_pieces_enemies(game, enemy_turn) +
+              5    * heuristic_king_amount(pieces_ours) -
+              5    * heuristic_king_amount(pieces_enemies) +
+              2    * heuristic_back_rows(pieces_ours, player_turn) -
+              2    * heuristic_back_rows(pieces_enemies, enemy_turn) +
+              2    * heuristic_middle_box(pieces_ours, player_turn) -
+              2    * heuristic_middle_box(pieces_enemies, enemy_turn) +
+              1.5  * heuristic_middle_rows(pieces_ours, player_turn) -
+              1.5  * heuristic_middle_rows(pieces_enemies, enemy_turn) +
+              0.25 * heuristic_king_in_corner(game, player_turn) -
+              0.25 * heuristic_king_in_corner(game, enemy_turn) +
+              0.75 * heuristic_bridge(game, player_turn) -
+              0.75 * heuristic_bridge(game, enemy_turn) +
+              0.75 * heuristic_oreo(game, player_turn) -
+              0.75 * heuristic_oreo(game, enemy_turn) +
+              0.75 * heuristic_dog(game, player_turn) -
+              0.75 * heuristic_dog(game, enemy_turn) +
+              0.75 * heuristic_triangle(game, player_turn) -
+              0.75 * heuristic_triangle(game, enemy_turn))

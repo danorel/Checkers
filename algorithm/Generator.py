@@ -22,6 +22,9 @@ def next_move(game: Game,
     available_moves = game.get_possible_moves()
     # Extract one random move for time-calculations safety.
     optimal_move = random.choice(available_moves)
+    # Compare the time. If is ending - terminate the process.
+    if datetime.datetime.now() > terminate_time:
+        return optimal_move
     a = float('-inf')
     for move in available_moves:
         game_copy = deepcopy(game)
