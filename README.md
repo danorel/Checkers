@@ -1,6 +1,9 @@
 # Chekers-Olivyeshka
 AI program meant for checkers contest as an exam for Fundamentals of AI course at NaUKMA
 
+Command to run the client: ```python3 client.py --production```<br/>
+Command to run the server: ```python3 server.py```
+
 ## What were the responsibilities:
 1. Creating a board game_drawing.py, connecting to the bot_production.py server, testing bot_test.py - Perch O.
 2. The first version of the MinMax algorithm with alpha-beta prunning Solver.py, Heuristic.py, testing, client.py - Orel D.
