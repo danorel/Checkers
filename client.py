@@ -3,14 +3,14 @@ import sys
 import logging
 import threading
 
-from monkey_patched.game import Game
+from src.client.game import Game
 
 # Init components
 game = Game()
 
 
 def client_test(loop):
-    from bot_test import BotTester
+    from src.bot.test import BotTester
 
     threading \
         .Thread(target=BotTester(loop).start_test) \
@@ -18,7 +18,7 @@ def client_test(loop):
 
 
 def client_production(loop):
-    from bot_production import BotProduction
+    from src.bot.production import BotProduction
 
     threading \
         .Thread(target=BotProduction(loop).start_test) \

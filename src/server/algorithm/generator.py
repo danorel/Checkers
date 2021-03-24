@@ -7,7 +7,7 @@ from copy import deepcopy
 from client import Game
 
 
-from .Heuristic import heuristic
+from .heuristic import heuristic
 
 
 def next_move(game: Game,

@@ -6,7 +6,7 @@ from trafaret_config import commandline
 from .utils import TRAFARET
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
-DEFAULT_CONFIG_PATH = BASE_DIR / 'config' / 'checkers-back.yaml'
+DEFAULT_CONFIG_PATH = BASE_DIR / 'config' / 'checkers.yaml'
 
 
 def get_config(argv=None):

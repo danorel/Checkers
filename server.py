@@ -2,22 +2,22 @@ import asyncio
 import logging
 import threading
 
-from monkey_patched.game import Game
+from src.client.game import Game
 
 # Init components
 game = Game()
 
 
 def start_server(loop):
-    from backend.server import main
+    from src.server.rules.server import main
 
     threading.Thread(target=main, args=(loop,)).start()
 
 
 def run_ui():
-    from board_drawing import BDManager
+    from src.client.board import BoardDisplay
 
-    BDManager()
+    BoardDisplay()
 
 
 if __name__ == '__main__':

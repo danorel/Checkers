@@ -5,7 +5,7 @@ import aiohttp
 
 from client import game
 
-from algorithm.Generator import next_move
+from src.server.algorithm.generator import next_move
 
 
 class BotTester:

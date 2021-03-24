@@ -4,8 +4,8 @@ import math
 from server import game
 
 
-# Board Drawing manager
-class BDManager:
+# Board Display manager
+class BoardDisplay:
     # Properties
     _needsUpdate = True
 
